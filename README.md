@@ -1,6 +1,4 @@
 # json-api-ify
-[![Build Status](https://travis-ci.org/kutlerskaggs/json-api-ify.svg?branch=master)](https://travis-ci.org/kutlerskaggs/json-api-ify)
-
 
 a `node.js` library for serializing your data to [JSON API v1.0](http://jsonapi.org/) compliant documents, inspired by [jsonapi-serializer](https://github.com/SeyZ/jsonapi-serializer). this library makes no assumptions regarding your choice of ORM/ODM, or the structure of your data. simply define your types and how their related and let this library do the heavy lifting.
 
@@ -486,6 +484,9 @@ serializes `data` into a JSON API v1.0 compliant document
 
             // whether or not to include the nested resource(s)
             include: true,
+            
+            // whether or not to always make the nested resource(s) an array
+            array: true,
 
             // optionally specify a non-default schema to use
             schema: 'my-schema',
