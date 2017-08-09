@@ -488,4 +488,161 @@ describe('deserialize', function() {
             }
         ], done);
     });
+
+    it('and nest single included relationships into object', function(done) {
+        async.waterfall([
+            function(_fn) {
+                let serializer = new Serializer({
+                    deserializeIncludedRelationships: true,
+                    nestDeserializedRelationships: true
+                });
+
+                async.parallel([
+                    function(__fn) {
+                        serializer.define('email', {}, __fn);
+                    },
+
+                    function(__fn) {
+                        serializer.define('to', {}, __fn);
+                    }
+                ], function(err) {
+                    if (err) {
+                        return _fn(err);
+                    }
+                    _fn(null, serializer);
+                });
+            },
+
+            function(serializer, fn) {
+                let payload = {
+                    data: {
+                        type: 'email',
+                        attributes: {
+                            from_email: 'noreply@example.com',
+                            from_name: 'Joe Bob',
+                            subject: 'Test Email',
+                            template_name: 'basic'
+                        },
+                        relationships: {
+                            recipients: {
+                                data: {
+                                    id: 1,
+                                    type: 'to'
+                                }
+                            }
+                        }
+                    },
+                    included: [{
+                        id: 1,
+                        type: 'to',
+                        attributes: {
+                            email: 'sam@example.com',
+                            first: 'Sam'
+                        }
+                    }]
+                };
+                serializer.deserialize(payload, function(err, data) {
+                    expect(err).to.not.exist;
+                    expect(data).to.have.all.keys('email', 'to');
+                    expect(data.email).to.have.property('recipients').that.is.not.an('array');
+
+                    let recipients = [
+                        {
+                            id: 1,
+                            email: 'sam@example.com',
+                            first: 'Sam'
+                        }
+                    ];
+
+                    recipients.forEach(function(recipient) {
+                        expect(data.email.recipients).to.contain(recipient);
+                    });
+
+                    fn(err);
+                });
+            }
+        ], done);
+    });
+
+    it('and nest single included relationships into array', function(done) {
+        async.waterfall([
+            function(_fn) {
+                let serializer = new Serializer({
+                    deserializeIncludedRelationships: true,
+                    nestDeserializedRelationships: true
+                });
+
+                async.parallel([
+                    function(__fn) {
+                        serializer.define('email', {
+                            relationships: {
+                                recipients: {
+                                    type: 'to',
+                                    array: true
+                                }
+                            }
+                        }, __fn);
+                    },
+
+                    function(__fn) {
+                        serializer.define('to', {}, __fn);
+                    }
+                ], function(err) {
+                    if (err) {
+                        return _fn(err);
+                    }
+                    _fn(null, serializer);
+                });
+            },
+
+            function(serializer, fn) {
+                let payload = {
+                    data: {
+                        type: 'email',
+                        attributes: {
+                            from_email: 'noreply@example.com',
+                            from_name: 'Joe Bob',
+                            subject: 'Test Email',
+                            template_name: 'basic'
+                        },
+                        relationships: {
+                            recipients: {
+                                data: {
+                                    id: 1,
+                                    type: 'to'
+                                }
+                            }
+                        }
+                    },
+                    included: [{
+                        id: 1,
+                        type: 'to',
+                        attributes: {
+                            email: 'sam@example.com',
+                            first: 'Sam'
+                        }
+                    }]
+                };
+                serializer.deserialize(payload, function(err, data) {
+                    expect(err).to.not.exist;
+                    expect(data).to.have.all.keys('email', 'to');
+                    expect(data.email).to.have.property('recipients').that.is.an('array').with.lengthOf(1);
+
+                    let recipients = [
+                        {
+                            id: 1,
+                            email: 'sam@example.com',
+                            first: 'Sam'
+                        }
+                    ];
+
+                    recipients.forEach(function(recipient) {
+                        expect(data.email.recipients).to.contain(recipient);
+                    });
+
+                    fn(err);
+                });
+            }
+        ], done);
+    });
 });
