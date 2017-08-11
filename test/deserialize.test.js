@@ -375,14 +375,14 @@ describe('deserialize', function() {
                                         first: 'Sam'
                                     }
                                 }, {
-                                    id: 2,
+                                    id: '2',
                                     type: 'to',
                                     attributes: {
                                         email: 'sue@example.com',
                                         first: 'Sue'
                                     }
                                 }, {
-                                    id: 1,
+                                    id: '1',
                                     type: 'cc',
                                     attributes: {
                                         email: 'william@example.com',
@@ -421,34 +421,34 @@ describe('deserialize', function() {
                         relationships: {
                             recipients: {
                                 data: [{
-                                    id: 1,
+                                    id: '1',
                                     type: 'to'
                                 }, {
-                                    id: 2,
+                                    id: '2',
                                     type: 'to'
                                 }, {
-                                    id: 1,
+                                    id: '1',
                                     type: 'cc'
                                 }]
                             }
                         }
                     },
                     included: [{
-                        id: 1,
+                        id: '1',
                         type: 'to',
                         attributes: {
                             email: 'sam@example.com',
                             first: 'Sam'
                         }
                     }, {
-                        id: 2,
+                        id: '2',
                         type: 'to',
                         attributes: {
                             email: 'sue@example.com',
                             first: 'Sue'
                         }
                     }, {
-                        id: 1,
+                        id: '1',
                         type: 'cc',
                         attributes: {
                             email: 'william@example.com',
@@ -463,17 +463,17 @@ describe('deserialize', function() {
 
                     let recipients = [
                         {
-                            id: 1,
+                            id: '1',
                             email: 'sam@example.com',
                             first: 'Sam'
                         },
                         {
-                            id:2,
+                            id: '2',
                             email: 'sue@example.com',
                             first: 'Sue'
                         },
                         {
-                            id: 1,
+                            id: '1',
                             email: 'william@example.com',
                             first: 'Bill'
                         }
@@ -526,14 +526,14 @@ describe('deserialize', function() {
                         relationships: {
                             recipients: {
                                 data: {
-                                    id: 1,
+                                    id: '1',
                                     type: 'to'
                                 }
                             }
                         }
                     },
                     included: [{
-                        id: 1,
+                        id: '1',
                         type: 'to',
                         attributes: {
                             email: 'sam@example.com',
@@ -548,7 +548,7 @@ describe('deserialize', function() {
 
                     let recipients = [
                         {
-                            id: 1,
+                            id: '1',
                             email: 'sam@example.com',
                             first: 'Sam'
                         }
@@ -608,14 +608,14 @@ describe('deserialize', function() {
                         relationships: {
                             recipients: {
                                 data: {
-                                    id: 1,
+                                    id: '1',
                                     type: 'to'
                                 }
                             }
                         }
                     },
                     included: [{
-                        id: 1,
+                        id: '1',
                         type: 'to',
                         attributes: {
                             email: 'sam@example.com',
@@ -630,7 +630,7 @@ describe('deserialize', function() {
 
                     let recipients = [
                         {
-                            id: 1,
+                            id: '1',
                             email: 'sam@example.com',
                             first: 'Sam'
                         }
