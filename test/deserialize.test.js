@@ -396,6 +396,7 @@ describe('deserialize', function() {
                 serializer.deserialize(payload, function(err, data) {
                     expect(err).to.not.exist;
                     expect(data).to.have.all.keys('email', 'to', 'cc');
+                    expect(data.email).to.have.property('recipients').that.is.an('array').with.lengthOf(3);
                     fn(err);
                 });
             }
@@ -640,6 +641,86 @@ describe('deserialize', function() {
                         expect(data.email.recipients).to.contain(recipient);
                     });
 
+                    fn(err);
+                });
+            }
+        ], done);
+    });
+
+    it('should deserialize entities that differ in relationships only', function(done) {
+        let serializer = new Serializer();
+        async.waterfall([
+            function(fn) {
+                let payload = {
+                    data: [
+                        {
+                            type: 'email',
+                            attributes: {
+                                from_email: 'noreply@example.com',
+                                from_name: 'Joe Bob',
+                                subject: 'Test Email',
+                                template_name: 'basic'
+                            },
+                            relationships: {
+                                recipients: {
+                                    data: [{
+                                        id: '1',
+                                        type: 'to',
+                                        attributes: {
+                                            email: 'sam@example.com',
+                                            first: 'Sam'
+                                        }
+                                    }, {
+                                        id: '2',
+                                        type: 'to',
+                                        attributes: {
+                                            email: 'sue@example.com',
+                                            first: 'Sue'
+                                        }
+                                    }]
+                                }
+                            }
+                        },
+                        {
+                            type: 'email',
+                            attributes: {
+                                from_email: 'noreply@example.com',
+                                from_name: 'Joe Bob',
+                                subject: 'Test Email',
+                                template_name: 'basic'
+                            },
+                            relationships: {
+                                recipients: {
+                                    data: [{
+                                        id: '1',
+                                        type: 'to',
+                                        attributes: {
+                                            email: 'sam@example.com',
+                                            first: 'Sam'
+                                        }
+                                    }, {
+                                        id: '3',
+                                        type: 'to',
+                                        attributes: {
+                                            email: 'bob@example.com',
+                                            first: 'Bob'
+                                        }
+                                    }]
+                                }
+                            }
+                        }
+                    ]
+                };
+                serializer.deserialize(payload, function(err, data) {
+                    expect(err).to.not.exist;
+                    expect(data).to.have.all.keys('email', 'to');
+                    expect(data.email).to.be.an('array').with.lengthOf(2);
+                    expect(data.email[0]).to.have.property('recipients').that.is.an('array').with.lengthOf(2);
+                    expect(data.email[0].recipients).to.include({id: '1'});
+                    expect(data.email[0].recipients).to.include({id: '2'});
+                    expect(data.email[1]).to.have.property('recipients').that.is.an('array').with.lengthOf(2);
+                    expect(data.email[1].recipients).to.include({id: '1'});
+                    expect(data.email[1].recipients).to.include({id: '3'});
                     fn(err);
                 });
             }
