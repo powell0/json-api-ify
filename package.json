@@ -22,7 +22,8 @@
   "dependencies": {
     "async": "^1.5.2",
     "joi": "^8.0.1",
-    "lodash": "^4.5.0"
+    "lodash": "^4.5.0",
+    "object-hash": "^1.1.8"
   },
   "devDependencies": {
     "bson-objectid": "^1.1.4",
